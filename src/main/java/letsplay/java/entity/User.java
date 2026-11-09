@@ -9,16 +9,18 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
 public class User {
     @Id
     private String id;
-    private String name;
+    private String username;
     @Indexed(unique = true)
     private String email;
     @Field("password")
     private String passwordHash;
-    private String role;
+    @Builder.Default
+    private String role = "USER";
 }

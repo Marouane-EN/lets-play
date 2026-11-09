@@ -1,6 +1,6 @@
 package letsplay.java.config;
 
-import org.apache.tomcat.util.http.Method;
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint((request, response, exception) -> {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized");
                 }))
-                .authorizeHttpRequests((auth) -> auth.requestMatchers("/api/users").hasRole("ADMIN")
-                        .requestMatchers("/api/auth/**", "error").permitAll()
-                        .requestMatchers(Method.GET, "/api/products").permitAll()
+                .authorizeHttpRequests((auth) -> auth.requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

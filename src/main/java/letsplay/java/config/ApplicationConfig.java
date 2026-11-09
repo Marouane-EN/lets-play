@@ -23,13 +23,13 @@ public class ApplicationConfig implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getName(),
+                user.getEmail(),
                 user.getPasswordHash(),
                 true,
                 true,
                 true,
                 true,
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole())));
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
 
     }
 }
