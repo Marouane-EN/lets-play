@@ -17,6 +17,7 @@ public class User {
     @Id
     private String id;
     @Field("name")
+    @Indexed(unique = true)
     private String username;
     @Indexed(unique = true)
     private String email;

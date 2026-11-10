@@ -1,6 +1,7 @@
 package letsplay.java.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +38,13 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id,
             @Valid @RequestBody letsplay.java.dto.Request.UserDto request) {
-        return ResponseEntity.ok(null);
+        UserDto user = userService.updateUser(id, request);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
-        return ResponseEntity.ok(null);
+        String message = userService.deleteUser(id);
+        return ResponseEntity.ok(Map.of("message", message));
     }
 }
