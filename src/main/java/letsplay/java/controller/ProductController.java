@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import letsplay.java.dto.Response.ProductDto;
-import letsplay.java.entity.User;
+import letsplay.java.config.SecurityUser;
+import letsplay.java.dto.Request.*;
+import letsplay.java.dto.Response.*;
 import letsplay.java.service.ProductService;
 
 @RestController
@@ -29,32 +30,32 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<ProductDto> products = productService.getProducts();
+        List<ResponseProductDto> products = productService.getProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProduct(@PathVariable String id) {
-        ProductDto product = productService.getProduct(id);
+        ResponseProductDto product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@Valid @RequestBody letsplay.java.dto.Request.ProductDto request,
-            @AuthenticationPrincipal User user) {
-        ProductDto product = productService.createProduct(request, user.getId());
+    public ResponseEntity<?> createProduct(@Valid @RequestBody RequestProductDto request,
+            @AuthenticationPrincipal SecurityUser user) {
+        ResponseProductDto product = productService.createProduct(request, user.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@Valid @RequestBody letsplay.java.dto.Request.ProductDto request,
-            @PathVariable String id, @AuthenticationPrincipal User user) {
-        ProductDto product = productService.updateProduct(request, user.getId(), id);
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody RequestProductDto request,
+            @PathVariable String id, @AuthenticationPrincipal SecurityUser user) {
+        ResponseProductDto product = productService.updateProduct(request, user.getId(), id);
         return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> deleteProduct(@PathVariable String id, @AuthenticationPrincipal SecurityUser user) {
         String message = productService.deleteProduct(user.getId(), id);
         return ResponseEntity.ok(Map.of("message", message));
     }

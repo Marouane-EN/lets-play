@@ -10,6 +10,8 @@ import letsplay.java.entity.User;
 public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByEmailOrUsername(String identifier);
+
     boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);

@@ -1,6 +1,6 @@
 package letsplay.java.dto.Response;
 
-public record ProductDto(
+public record ResponseProductDto(
                 String id,
                 String name,
                 String description,

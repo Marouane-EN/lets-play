@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import letsplay.java.dto.Response.UserDto;
+import letsplay.java.dto.Request.*;
+import letsplay.java.dto.Response.*;
 import letsplay.java.service.UserService;
 
 @RequestMapping("/users")
@@ -25,20 +26,20 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        List<UserDto> users = userService.getAllUsers();
+        List<ResponseUserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id) {
-        UserDto user = userService.getUserById(id);
+        ResponseUserDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id,
-            @Valid @RequestBody letsplay.java.dto.Request.UserDto request) {
-        UserDto user = userService.updateUser(id, request);
+            @Valid @RequestBody RequestUserDto request) {
+        ResponseUserDto user = userService.updateUser(id, request);
         return ResponseEntity.ok(user);
     }
 

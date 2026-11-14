@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import letsplay.java.dto.Response.ProductDto;
+import letsplay.java.dto.Request.*;
+import letsplay.java.dto.Response.*;
 import letsplay.java.entity.Product;
 import letsplay.java.entity.User;
 import letsplay.java.repository.ProductRepository;
@@ -20,25 +21,25 @@ public class ProductService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<ProductDto> getProducts() {
+    public List<ResponseProductDto> getProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map((product) -> mapToDto(product)).toList();
     }
 
-    public ProductDto getProduct(String id) {
+    public ResponseProductDto getProduct(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         return mapToDto(product);
     }
 
-    public ProductDto createProduct(letsplay.java.dto.Request.ProductDto request, String userId) {
+    public ResponseProductDto createProduct(RequestProductDto request, String userId) {
         Product newProduct = Product.builder().name(request.title()).description(request.description())
                 .price(request.price()).userId(userId).build();
         productRepository.save(newProduct);
         return mapToDto(newProduct);
     }
 
-    public ProductDto updateProduct(letsplay.java.dto.Request.ProductDto request, String userId, String productId) {
+    public ResponseProductDto updateProduct(RequestProductDto request, String userId, String productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Product product = productRepository.findById(productId)
@@ -65,8 +66,8 @@ public class ProductService {
         return "Product deleted successfully";
     }
 
-    private ProductDto mapToDto(Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getDescription(), product.getPrice(),
+    private ResponseProductDto mapToDto(Product product) {
+        return new ResponseProductDto(product.getId(), product.getName(), product.getDescription(), product.getPrice(),
                 product.getUserId());
     }
 }

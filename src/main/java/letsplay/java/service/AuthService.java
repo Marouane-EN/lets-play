@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import letsplay.java.dto.Request.RegisterDto;
-import letsplay.java.dto.Response.AuthDto;
+import letsplay.java.dto.Request.*;
+import letsplay.java.dto.Response.*;
 import letsplay.java.entity.User;
 import letsplay.java.repository.UserRepository;
 
@@ -30,7 +30,7 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
-    public void register(RegisterDto request) {
+    public void register(RequestRegisterDto request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is all ready taken");
         }
@@ -45,7 +45,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public AuthDto login(String identifier, String password) {
+    public ResponseAuthDto login(String identifier, String password) {
 
         Authentication authentication;
 
@@ -63,11 +63,11 @@ public class AuthService {
 
         UserDetails authenticatedUser = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(authenticatedUser);
-        AuthDto authDto = mapToDto(token);
+        ResponseAuthDto authDto = mapToDto(token);
         return authDto;
     }
 
-    private AuthDto mapToDto(String token) {
-        return new AuthDto(token);
+    private ResponseAuthDto mapToDto(String token) {
+        return new ResponseAuthDto(token);
     }
 }

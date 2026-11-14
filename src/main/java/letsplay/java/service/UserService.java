@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import letsplay.java.dto.Response.UserDto;
+import letsplay.java.dto.Request.RequestUserDto;
+import letsplay.java.dto.Response.*;
 import letsplay.java.entity.User;
 import letsplay.java.repository.ProductRepository;
 import letsplay.java.repository.UserRepository;
@@ -20,18 +21,18 @@ public class UserService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<UserDto> getAllUsers() {
+    public List<ResponseUserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(user -> mapToDto(user)).toList();
     }
 
-    public UserDto getUserById(String id) {
+    public ResponseUserDto getUserById(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return mapToDto(user);
     }
 
-    public UserDto updateUser(String id, letsplay.java.dto.Request.UserDto request) {
+    public ResponseUserDto updateUser(String id, RequestUserDto request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         if (userRepository.existsByEmail(request.email())) {
@@ -56,7 +57,7 @@ public class UserService {
         return "User deleted successfully";
     }
 
-    private UserDto mapToDto(User user) {
-        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+    private ResponseUserDto mapToDto(User user) {
+        return new ResponseUserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
     }
 }

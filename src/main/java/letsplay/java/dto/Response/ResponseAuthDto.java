@@ -1,5 +1,5 @@
 package letsplay.java.dto.Response;
 
-public record AuthDto(
+public record ResponseAuthDto(
         String token) {
 }

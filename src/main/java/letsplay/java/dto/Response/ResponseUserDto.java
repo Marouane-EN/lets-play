@@ -1,6 +1,6 @@
 package letsplay.java.dto.Response;
 
-public record UserDto(
+public record ResponseUserDto(
                 String id,
                 String username,
                 String email,
