@@ -44,7 +44,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        if (!product.getUserId().equals(userId) || !user.getRole().equals("ADMIN")) {
+        if (!product.getUserId().equals(userId) && !user.getRole().equals("ADMIN")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can not update this product");
         }
         product.setName(request.title());
@@ -59,7 +59,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-        if (!product.getUserId().equals(userId) || !user.getRole().equals("ADMIN")) {
+        if (!product.getUserId().equals(userId) && !user.getRole().equals("ADMIN")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can not delete this product");
         }
         productRepository.delete(product);

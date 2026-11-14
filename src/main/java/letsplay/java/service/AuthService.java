@@ -32,10 +32,10 @@ public class AuthService {
 
     public void register(RequestRegisterDto request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is all ready taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already taken");
         }
         if (userRepository.existsByUsername(request.username())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is all ready taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username is already taken");
         }
         String hashPassword = passwordEncoder.encode(request.password());
         User newUser = User.builder().username(request.username()).email(request.email())

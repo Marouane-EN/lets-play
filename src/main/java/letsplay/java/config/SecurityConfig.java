@@ -37,11 +37,11 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint((request, response, exception) -> {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 }))
                 .authorizeHttpRequests((auth) -> auth.requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/auth/**", "/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

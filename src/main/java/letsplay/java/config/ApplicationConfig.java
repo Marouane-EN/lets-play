@@ -19,17 +19,9 @@ public class ApplicationConfig implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailOrUsername(identifier)
+        User user = userRepository.findByEmailOrUsername(identifier, identifier)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPasswordHash(),
-                true,
-                true,
-                true,
-                true,
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
-
+        return new SecurityUser(user);
     }
 }
