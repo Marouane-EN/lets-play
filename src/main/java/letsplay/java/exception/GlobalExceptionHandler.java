@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +25,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -75,6 +77,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMethod(), ex.getSupportedHttpMethods());
 
         return new ResponseEntity<>(buildErrorResponse(status, message), status);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(
+            NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new ResponseEntity<>(
+                buildErrorResponse(HttpStatus.NOT_FOUND, "The requested endpoint does not exist."),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(
+            Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        String message = (body instanceof ProblemDetail problem && problem.getDetail() != null)
+                ? problem.getDetail()
+                : HttpStatus.valueOf(statusCode.value()).getReasonPhrase();
+        return new ResponseEntity<>(buildErrorResponse(statusCode, message), headers, statusCode);
     }
 
     @Override

@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "productes")
+@Document(collection = "products")
 public class Product {
     @Id
     private String id;
