@@ -54,10 +54,10 @@ public class UserService {
     public ResponseUserDto updateUser(String id, RequestUserDto request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        if (userRepository.existsByEmail(request.email())) {
+        if (!request.email().equals(user.getEmail()) && userRepository.existsByEmail(request.email())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
-        if (userRepository.existsByUsername(request.username())) {
+        if (!request.username().equals(user.getUsername()) && userRepository.existsByUsername(request.username())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
         }
         user.setUsername(request.username());

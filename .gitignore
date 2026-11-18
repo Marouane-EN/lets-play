@@ -36,3 +36,7 @@ build/
 .env
 src/main/resources/application.yaml
 src/main/resources/application.yaml
+
+#### keystore ###
+*.p12
+letsplay.crt
