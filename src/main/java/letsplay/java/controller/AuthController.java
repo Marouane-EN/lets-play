@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import letsplay.java.dto.Request.*;
 import letsplay.java.dto.Response.*;
@@ -19,12 +20,14 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @PermitAll
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody RequestLoginDto request) {
         ResponseAuthDto authDto = authService.login(request.identifier(), request.password());
         return ResponseEntity.ok(authDto);
     }
 
+    @PermitAll
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RequestRegisterDto request) {
         authService.register(request);

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import letsplay.java.config.SecurityUser;
 import letsplay.java.dto.Request.*;
@@ -28,18 +30,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @PermitAll
     @GetMapping
     public ResponseEntity<?> getProducts() {
         List<ResponseProductDto> products = productService.getProducts();
         return ResponseEntity.ok(products);
     }
 
+    @PermitAll
     @GetMapping("/{id}")
     public ResponseEntity<?> getProduct(@PathVariable String id) {
         ResponseProductDto product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<?> createProduct(@Valid @RequestBody RequestProductDto request,
             @AuthenticationPrincipal SecurityUser user) {
@@ -47,6 +52,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@Valid @RequestBody RequestProductDto request,
             @PathVariable String id, @AuthenticationPrincipal SecurityUser user) {
@@ -54,6 +60,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable String id, @AuthenticationPrincipal SecurityUser user) {
         String message = productService.deleteProduct(user.getId(), id);
