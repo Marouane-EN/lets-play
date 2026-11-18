@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: java
+  config:
+    import: optional:file:.env[.properties]
+  mongodb:
+    uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:27017/letsplay?authSource=admin
+  data:
+    mongodb:
+      auto-index-creation: true
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000 # 24 hours
+admin:
+  username: ${ADMIN_USERNAME}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+server:
+  port: 8443
+  ssl:
+    key-store: file:keystore.p12
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+    key-alias: letsplay
+  error:
+    include-stacktrace: never
+    include-message: always
