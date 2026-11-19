@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import letsplay.java.dto.Request.RequestRegisterDto;
+import letsplay.java.dto.Request.RequestCreateUserDto;
 import letsplay.java.dto.Request.RequestUserDto;
 import letsplay.java.dto.Response.*;
 import letsplay.java.entity.User;
@@ -36,7 +36,7 @@ public class UserService {
         return mapToDto(user);
     }
 
-    public ResponseUserDto createUser(RequestRegisterDto request) {
+    public ResponseUserDto createUser(RequestCreateUserDto request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already taken");
         }
@@ -45,7 +45,7 @@ public class UserService {
         }
         String hashPassword = passwordEncoder.encode(request.password());
         User newUser = User.builder().username(request.username()).email(request.email())
-                .passwordHash(hashPassword).build();
+                .passwordHash(hashPassword).role(request.role()).build();
 
         userRepository.save(newUser);
         return mapToDto(newUser);
